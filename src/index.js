@@ -24,7 +24,13 @@ function handleDOMContentLoaded() {
       cardTitle.textContent = data.title;
       cardImage.src = data.image;
 
-     
+      // increase image likes on the page
+      likeButton.addEventListener("click", function (e) {
+        // console.log(e.target);
+
+        count++;
+        likeCount.textContent = `${count} likes`;
+      });
     });
 }
 
