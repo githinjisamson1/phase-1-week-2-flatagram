@@ -31,6 +31,17 @@ function handleDOMContentLoaded() {
         count++;
         likeCount.textContent = `${count} likes`;
       });
+
+      //   add new comment to page
+      commentForm.addEventListener("submit", function (e) {
+        // console.log(e.target);
+        e.preventDefault();
+
+        const li = document.createElement("li");
+        li.textContent = comment.value;
+        commentsList.appendChild(li);
+        commentForm.reset();
+      });
     });
 }
 
