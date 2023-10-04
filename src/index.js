@@ -1,48 +1,60 @@
-// write your code here
-
-function handleDOMContentLoaded() {
-  // grab elements
-  const cardTitle = document.querySelector("#card-title");
-  const cardImage = document.querySelector("#card-image");
-  let likeCount = document.querySelector("#like-count");
-  const likeButton = document.querySelector("#like-button");
+function handleCommentFormSubmission(e) {
+  e.preventDefault();
   const commentsList = document.querySelector("#comments-list");
-  const commentForm = document.querySelector("#comment-form");
-  const comment = document.querySelector("#comment");
+  const commentValue = document.querySelector("#comment").value;
 
-  //   set initial likeCount to 0
+  //   manipulate dom
+  const liComment = document.createElement("li");
+  liComment.innerHTML = commentValue;
+  commentsList.appendChild(liComment);
+
+  //   clear form values after submission
+  e.target.reset();
+}
+
+function handleLikeButton(e, count) {
+  const likeCount = document.querySelector("#like-count");
+  likeCount.innerHTML = `${count} likes`;
+}
+
+function displayInformation(data) {
+  const title = document.querySelector("#card-title");
+  const image = document.querySelector("#card-image");
+  const likeButton = document.querySelector("#like-button");
+  const commentForm = document.querySelector("#comment-form");
+
+  //   initialize like counts to 0
   let count = 0;
 
-  //   fetch API - 1
+  //   manipulate dom
+  title.innerHTML = data.title;
+  image.src = data.image;
+
+  //   clicking full heart
+  likeButton.addEventListener("click", (e) => {
+    count++;
+    handleLikeButton(e, count);
+  });
+
+  //   adding comment on page
+  commentForm.addEventListener("submit", (e) => {
+    handleCommentFormSubmission(e);
+  });
+}
+
+function handleDOMContentLoaded(e) {
+  // fetch API - 1
   fetch("http://localhost:3000/images/1")
     .then((response) => {
       return response.json();
     })
     .then((data) => {
-      console.log(data);
-
-      cardTitle.textContent = data.title;
-      cardImage.src = data.image;
-
-      // increase image likes on the page
-      likeButton.addEventListener("click", function (e) {
-        // console.log(e.target);
-
-        count++;
-        likeCount.textContent = `${count} likes`;
-      });
-
-      //   add new comment to page
-      commentForm.addEventListener("submit", function (e) {
-        // console.log(e.target);
-        e.preventDefault();
-
-        const li = document.createElement("li");
-        li.textContent = comment.value;
-        commentsList.appendChild(li);
-        commentForm.reset();
-      });
+      displayInformation(data);
+    })
+    .catch((err) => {
+      console.log(err);
     });
 }
 
+// wait HTML to load first
 document.addEventListener("DOMContentLoaded", handleDOMContentLoaded);
